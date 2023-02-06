@@ -1,0 +1,94 @@
+package com.example.planflash;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText timestart1, apmstart1,apmend1, timeend1, task1; //Dito mo lalagay yung input
+    SharedPreferences sp, spindicator;
+    String ts1, apms1, apme1, te1, t1;
+    Button savebutton;
+    TextView dataexist, timestart2, apmstart2,apmend2, timeend2, task2; // tapos eto yung sasalo
+
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        timestart1 = findViewById(R.id.timestart1);
+        timeend1 = findViewById(R.id.timeend1);
+        apmstart1 = findViewById(R.id.apmstart1);
+        apmend1 = findViewById(R.id.apmend1);
+        task1 = findViewById(R.id.task1);
+        timestart2 = findViewById(R.id.timestart2);
+        timeend2 = findViewById(R.id.timeend2);
+        apmstart2 = findViewById(R.id.apmstart2);
+        apmend2 = findViewById(R.id.apmend2);
+        task2 = findViewById(R.id.task2);
+        dataexist = findViewById(R.id.dataexist);
+        savebutton = findViewById(R.id.savebutton);
+
+        savebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveuserrdata();
+                load_data();
+            }
+        });
+
+        load_data();
+
+    }
+
+
+    void saveuserrdata(){
+
+        sp = getSharedPreferences("Users Data", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sp.edit();
+
+        //parang gagawa yata ng textfile to tapos etong mga "Time Start 1: " mag serve as variable sa textfile
+        editor.putString("Time Start 1: ", timestart1.getText().toString());
+        editor.putString("AM/PM S1: ", apmstart1.getText().toString());
+        editor.putString("Time End 1: ", timeend1.getText().toString());
+        editor.putString("AM/PM E1: ", apmend1.getText().toString());
+        editor.putString("Task 1: ", task1.getText().toString());
+        editor.apply();
+
+        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+    }
+
+    void load_data(){
+
+        //tapos eto naman tinawag mo lang yung file tapos yung laman nya sa loob na variable
+        // parang class tyaka instance variable lang sila
+        sp = getSharedPreferences("Users Data", Context.MODE_PRIVATE);
+        ts1 = sp.getString("Time Start 1: ", "");
+        apms1 = sp.getString("AM/PM S1: ", "");
+        te1 = sp.getString("Time End 1: ", "");
+        apme1 = sp.getString("AM/PM E1: ", "");
+        t1 = sp.getString("Task 1: ", "");
+
+        update_data(ts1, apms1, apme1, te1, t1);
+    }
+
+    void update_data(String ts1, String apms1, String apme1, String te1, String t1){
+        //tapos update mo yung UI
+        timestart2.setText(ts1);
+        timeend2.setText(te1);
+        apmstart2.setText(apms1);
+        apmend2.setText(apme1);
+        task2.setText(t1);
+    }
+}
